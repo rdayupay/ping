@@ -1,0 +1,61 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+* {
+  margin: 0;
+}
+html,
+body {
+  height: 100%;
+}
+body {
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  font-family: 'Lato', sans-serif;
+}
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  overflow-wrap: break-word;
+}
+#root,
+#__next {
+  isolation: isolate;
+}
+
+/* Custom global styles */
+html {
+  color-scheme: dark;
+}
+
+body {
+  background-attachment: fixed;
+  background-image: conic-gradient(
+    from 270deg at 50% -20%,
+    hsl(240deg 40% 5%) 50%,
+    hsl(250deg 40% 20%),
+    hsl(250deg 30% 25%),
+    hsl(250deg 40% 20%),
+    hsl(240deg 40% 5%)
+  );
+}
