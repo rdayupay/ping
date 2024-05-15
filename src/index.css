@@ -57,3 +57,21 @@ body {
     hsl(240deg 40% 5%)
   );
 }
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    max-height: 80vh;
+  }
+
+  .no-scrollbar:hover {
+    display: block;
+    scrollbar-width: thin;
+    -ms-overflow-style: scrollbar;
+  }
+}
