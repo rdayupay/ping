@@ -28,9 +28,6 @@ svg {
 input,
 button,
 textarea,
-select {
-  @apply font-inherit;
-}
 p,
 h1,
 h2,

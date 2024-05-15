@@ -1,5 +1,11 @@
+import ChatInterface from './components/ChatInterface';
+
 function App() {
-  return <div>Ping | Chat Application</div>;
+  return (
+    <>
+      <ChatInterface />
+    </>
+  );
 }
 
 export default App;
