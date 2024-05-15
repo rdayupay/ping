@@ -1,18 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 *,
 *::before,
 *::after {
-  box-sizing: border-box;
+  @apply box-border;
 }
 * {
-  margin: 0;
+  @apply m-0;
 }
 html,
 body {
-  height: 100%;
+  @apply h-full;
 }
 body {
-  line-height: 1.5;
-  -webkit-font-smoothing: antialiased;
+  @apply leading-relaxed antialiased;
   font-family: 'Lato', sans-serif;
 }
 img,
@@ -20,14 +23,13 @@ picture,
 video,
 canvas,
 svg {
-  display: block;
-  max-width: 100%;
+  @apply block max-w-full;
 }
 input,
 button,
 textarea,
 select {
-  font: inherit;
+  @apply font-inherit;
 }
 p,
 h1,
@@ -36,14 +38,13 @@ h3,
 h4,
 h5,
 h6 {
-  overflow-wrap: break-word;
+  @apply break-words;
 }
 #root,
 #__next {
-  isolation: isolate;
+  @apply isolate;
 }
 
-/* Custom global styles */
 html {
   color-scheme: dark;
 }
