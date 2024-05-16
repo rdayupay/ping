@@ -1,8 +1,13 @@
 import { useState } from 'react';
 import { Search, Plus, Minus } from 'react-feather';
+import AddUserModal from './AddUserModal';
 
 function ChatList() {
   const [addUser, setAddUser] = useState(false);
+
+  const toggleAddUserModal = () => {
+    setAddUser(!addUser);
+  };
 
   return (
     <div>
@@ -17,11 +22,11 @@ function ChatList() {
           />
         </div>
 
-        <button type="button" onClick={() => setAddUser(!addUser)}>
+        <button type="button" onClick={toggleAddUserModal}>
           {addUser ? (
-            <Plus size={16} className="text-gray-300 cursor-pointer ml-1" />
-          ) : (
             <Minus size={16} className="text-gray-300 cursor-pointer ml-1" />
+          ) : (
+            <Plus size={16} className="text-gray-300 cursor-pointer ml-1" />
           )}
         </button>
       </div>
@@ -39,6 +44,8 @@ function ChatList() {
           </div>
         </li>
       </ul>
+
+      {addUser && <AddUserModal onClose={toggleAddUserModal} />}
     </div>
   );
 }
