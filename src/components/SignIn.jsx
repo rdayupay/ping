@@ -1,8 +1,12 @@
 function SignIn() {
+  const handleSignIn = (event) => {
+    event.preventDefault();
+  };
+
   return (
     <div className="bg-violet-600 p-8 rounded-lg shadow-lg w-full max-w-md bg-opacity-75">
       <h2 className="text-3xl mb-6 text-center">Welcome back!</h2>
-      <form className="space-y-6">
+      <form className="space-y-6" onSubmit={handleSignIn}>
         <input
           type="text"
           placeholder="Email"
