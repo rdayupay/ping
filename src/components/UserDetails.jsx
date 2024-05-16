@@ -13,6 +13,13 @@ function UserDetails() {
         <p className="text-sm text-center">Lorem ipsum dolor sit amet.</p>
       </article>
 
+      <button
+        type="button"
+        className="mx-4 mb-6 text-sm text-red-700 font-semibold hover:text-red-500"
+      >
+        Block User
+      </button>
+
       <aside>
         <ul className="px-4">
           <li className="flex justify-between mb-4">
@@ -21,13 +28,13 @@ function UserDetails() {
           </li>
 
           <li className="flex justify-between mb-4">
-            <span>Privacy & help</span>
+            <span>Privacy & Help</span>
             <ChevronUp className="cursor-pointer" />
           </li>
 
           <li className="flex-col mb-4">
             <div className="flex justify-between mb-2">
-              <span>Shared photos</span>
+              <span>Shared Media</span>
               <ChevronDown className="cursor-pointer" />
             </div>
 
@@ -53,9 +60,9 @@ function UserDetails() {
 
       <button
         type="button"
-        className="mx-4 text-sm text-red-700 font-semibold hover:text-red-500"
+        className="block mx-2 text-center mt-36 text-md text-white bg-blue-700  py-2 w-full rounded-md hover:bg-blue-600"
       >
-        Block User
+        Logout
       </button>
     </section>
   );
