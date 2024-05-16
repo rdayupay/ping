@@ -12,8 +12,11 @@ function SignUp() {
     url: '',
   });
 
+  const [loading, setLoading] = useState(false);
+
   const handleSignUp = async (event) => {
     event.preventDefault();
+    setLoading(true);
 
     const formData = new FormData(event.target);
 
@@ -40,6 +43,8 @@ function SignUp() {
     } catch (error) {
       console.error(error);
       toast.error(error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -74,28 +79,33 @@ function SignUp() {
           id="file"
           className="hidden"
           onChange={handleAvatar}
+          disabled={loading}
         />
         <input
           type="text"
           placeholder="Username"
           name="username"
-          className="w-full px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-4 py-2 rounded-md focus:outline-none focus:ring-2 bg-white text-black focus:ring-blue-500 disabled:cursor-not-allowed disabled:bg-gray-400"
+          disabled={loading}
         />
         <input
           type="email"
           placeholder="Email"
           name="email"
-          className="w-full px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-4 py-2 rounded-md focus:outline-none focus:ring-2 bg-white text-black focus:ring-blue-500 disabled:cursor-not-allowed disabled:bg-gray-400"
+          disabled={loading}
         />
         <input
           type="password"
           placeholder="Password"
           name="password"
-          className="w-full px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-4 py-2 rounded-md focus:outline-none focus:ring-2 bg-white text-black focus:ring-blue-500 disabled:cursor-not-allowed disabled:bg-gray-400"
+          disabled={loading}
         />
         <button
           type="submit"
-          className="w-full bg-blue-500  py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          className="w-full bg-blue-500  py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:bg-gray-400"
+          disabled={loading}
         >
           Sign Up
         </button>
