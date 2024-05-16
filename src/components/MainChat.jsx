@@ -32,7 +32,38 @@ function MainChat() {
         </div>
       </section>
 
-      <section className="flex flex-grow">Center</section>
+      <section className="flex-col flex-grow px-4 py-4 overflow-y-auto">
+        {/* Message from another person */}
+        <div className="flex mb-4">
+          <img
+            src="/Selena.png"
+            alt="Selena Gomez smiling"
+            className="w-6 h-6 rounded-full object-cover mr-4"
+          />
+          <div>
+            <p className="text-sm text-white bg-gray-700 rounded-lg p-3 max-w-md">
+              Lorem, ipsum dolor sit amet consectetur adipisicing elit. Iste
+              quam sapiente, temporibus aut aspernatur enim illum nulla deleniti
+              quas adipisci voluptate impedit ratione qui blanditiis minima?
+              Animi inventore voluptate nisi!
+            </p>
+            <span className="text-xs text-gray-500">1 min ago</span>
+          </div>
+        </div>
+
+        {/* Message from myself */}
+        <div className="flex  mb-4 flex-col items-end">
+          <img
+            src="/TSCat.jpg"
+            alt="cat"
+            className="max-w-xs h-auto rounded-lg object-cover mb-2"
+          />
+          <p className="text-sm text-white bg-blue-500 rounded-lg p-3 max-w-md">
+            Lorem, ipsum dolor sit amet consectetur adipisicing elit.
+          </p>
+          <span className="text-xs text-gray-500 mt-1">1 min ago</span>
+        </div>
+      </section>
 
       <section className="flex items-center gap-2 px-2 py-4 mb-6 border-t border-gray-700">
         <div className="flex items-center gap-1 sm:gap-2">
