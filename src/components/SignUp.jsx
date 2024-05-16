@@ -1,10 +1,47 @@
 import { useState } from 'react';
+import toast from 'react-hot-toast';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { doc, setDoc } from 'firebase/firestore';
+
+import { auth, db } from '../lib/firebase';
+import upload from '../lib/upload';
 
 function SignUp() {
   const [avatar, setAvatar] = useState({
     file: null,
     url: '',
   });
+
+  const handleSignUp = async (event) => {
+    event.preventDefault();
+
+    const formData = new FormData(event.target);
+
+    const { username, email, password } = Object.fromEntries(formData);
+
+    try {
+      const res = await createUserWithEmailAndPassword(auth, email, password);
+
+      const imgUrl = await upload(avatar.file);
+
+      await setDoc(doc(db, 'users', 'res.user.uid'), {
+        username,
+        email,
+        avatar: imgUrl,
+        id: res.user.uid,
+        blocked: [],
+      });
+
+      await setDoc(doc(db, 'userMessages', 'res.user.uid'), {
+        messages: [],
+      });
+
+      toast.success('Account created successfully!');
+    } catch (error) {
+      console.error(error);
+      toast.error(error.message);
+    }
+  };
 
   const handleAvatar = (event) => {
     if (!event.target.files[0]) {
@@ -20,7 +57,7 @@ function SignUp() {
   return (
     <div className="bg-violet-600 p-8 rounded-lg shadow-lg w-full max-w-md bg-opacity-75">
       <h2 className="text-3xl mb-6 text-center">Create an Account</h2>
-      <form className="space-y-6">
+      <form className="space-y-6" onSubmit={handleSignUp}>
         <label
           htmlFor="file"
           className="flex items-center justify-center underline cursor-pointer"
