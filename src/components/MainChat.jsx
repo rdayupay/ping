@@ -1,10 +1,19 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Camera, Image, Info, Mic, Phone, Smile, Video } from 'react-feather';
 import EmojiPicker from 'emoji-picker-react';
 
 function MainChat() {
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState('');
+
+  const messageEndRef = useRef(null);
+
+  useEffect(() => {
+    messageEndRef.current?.scrollIntoView({
+      behavior: 'auto',
+      block: 'end',
+    });
+  }, []);
 
   const handleEmojiClick = (event) => {
     setMessage((prevMessage) => prevMessage + event.emoji);
@@ -32,9 +41,9 @@ function MainChat() {
         </div>
       </section>
 
-      <section className="flex-col flex-grow px-4 py-4 overflow-y-auto">
+      <section className="flex flex-col flex-grow px-4 py-4 overflow-y-auto">
         {/* Message from another person */}
-        <div className="flex mb-4">
+        <div className="flex">
           <img
             src="/Selena.png"
             alt="Selena Gomez smiling"
@@ -52,20 +61,22 @@ function MainChat() {
         </div>
 
         {/* Message from myself */}
-        <div className="flex  mb-4 flex-col items-end">
+        <div className="flex flex-col items-end mb-4">
           <img
             src="/TSCat.jpg"
             alt="cat"
-            className="max-w-xs h-auto rounded-lg object-cover mb-2"
+            className="w-full max-w-xs rounded-lg object-cover mb-2"
           />
           <p className="text-sm text-white bg-blue-500 rounded-lg p-3 max-w-md">
             Lorem, ipsum dolor sit amet consectetur adipisicing elit.
           </p>
           <span className="text-xs text-gray-500 mt-1">1 min ago</span>
         </div>
+
+        <div ref={messageEndRef} />
       </section>
 
-      <section className="flex items-center gap-2 px-2 py-4 mb-6 border-t border-gray-700">
+      <section className="flex items-center gap-2 px-2 py-4 border-t border-gray-700">
         <div className="flex items-center gap-1 sm:gap-2">
           <Image size={32} className="text-white hover:cursor-pointer" />
           <Camera size={32} className="text-white hover:cursor-pointer" />
