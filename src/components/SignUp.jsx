@@ -27,7 +27,7 @@ function SignUp() {
 
       const imgUrl = await upload(avatar.file);
 
-      await setDoc(doc(db, 'users', 'res.user.uid'), {
+      await setDoc(doc(db, 'users', res.user.uid), {
         username,
         email,
         avatar: imgUrl,
@@ -35,7 +35,7 @@ function SignUp() {
         blocked: [],
       });
 
-      await setDoc(doc(db, 'userMessages', 'res.user.uid'), {
+      await setDoc(doc(db, 'userMessages', res.user.uid), {
         messages: [],
       });
 
