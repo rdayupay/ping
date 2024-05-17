@@ -32,14 +32,14 @@ function SignIn() {
           type="text"
           placeholder="Email"
           name="email"
-          className="w-full px-4 py-2  rounded-md bg-white text-black focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:cursor-not-allowed disabled:bg-gray-400"
+          className="w-full px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:cursor-not-allowed disabled:bg-gray-400"
           disabled={loading}
         />
         <input
           type="password"
           placeholder="Password"
           name="password"
-          className="w-full px-4 py-2  rounded-md bg-white text-black focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:cursor-not-allowed disabled:bg-gray-400"
+          className="w-full px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:cursor-not-allowed disabled:bg-gray-400"
           disabled={loading}
         />
         <button
