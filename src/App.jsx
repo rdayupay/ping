@@ -18,7 +18,13 @@ function App() {
     return () => unSubscribe();
   }, [fetchUserInfo]);
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="animate-spin rounded-full h-20 w-20 border-t-2 border-b-2 border-white"></div>
+      </div>
+    );
+  }
 
   return (
     <>
