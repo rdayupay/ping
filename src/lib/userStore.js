@@ -20,7 +20,7 @@ export const useUserStore = create((set) => ({
         set({ currentUser: null, isLoading: false });
       }
     } catch (error) {
-      console.error(error);
+      console.error('Error fetching user info:', error);
       return set({ currentUser: null, isLoading: false });
     }
   },
