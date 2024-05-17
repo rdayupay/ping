@@ -1,10 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import { Camera, Image, Info, Mic, Phone, Smile, Video } from 'react-feather';
 import EmojiPicker from 'emoji-picker-react';
+import { doc, onSnapshot } from 'firebase/firestore';
+import { db } from '../lib/firebase';
 
 function MainChat() {
   const [isOpen, setIsOpen] = useState(false);
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState();
+  const [text, setText] = useState('');
 
   const messageEndRef = useRef(null);
 
@@ -15,8 +18,19 @@ function MainChat() {
     });
   }, []);
 
+  useEffect(() => {
+    const unsubscribe = onSnapshot(
+      doc(db, 'messages', 'WAQ4WcCOqnDmW1uE8iYb'),
+      (res) => {
+        setMessage(res.data());
+      }
+    );
+
+    return () => unsubscribe();
+  }, []);
+
   const handleEmojiClick = (event) => {
-    setMessage((prevMessage) => prevMessage + event.emoji);
+    setText((prevText) => prevText + event.emoji);
     setIsOpen(false);
   };
 
@@ -86,8 +100,8 @@ function MainChat() {
           type="text"
           placeholder="Type a message..."
           className="w-full h-10 px-4 py-2 rounded-md bg-gray-700 text-white text-sm focus:outline-none focus:ring-1 focus:ring-gray-600 focus:border-transparent"
-          value={message}
-          onChange={(event) => setMessage(event.target.value)}
+          value={text}
+          onChange={(event) => setText(event.target.value)}
         />
 
         <div className="relative">
