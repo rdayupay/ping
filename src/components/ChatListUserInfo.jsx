@@ -1,15 +1,21 @@
 import { Settings, Video, Edit } from 'react-feather';
 
+import { useUserStore } from '../lib/userStore';
+
 function ChatListUserInfo() {
+  const { currentUser } = useUserStore();
+
   return (
     <div className="flex px-4 py-2 mb-2">
       <img
-        src="/TaylorSwift.png"
-        alt="Taylor Swift smiling"
+        src={currentUser?.avatar || '/TaylorSwift.png'}
+        alt="User avatar"
         className="w-10 h-10 rounded-full object-cover mr-4"
       />
       <div>
-        <span className="font-semibold text-white">Taylor Swift</span>
+        <span className="font-semibold text-white">
+          {currentUser?.username}
+        </span>
         <div className="flex gap-2 items-center">
           <Video size={16} className="cursor-pointer" />
           <Edit size={16} className="cursor-pointer" />

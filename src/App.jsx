@@ -11,11 +11,11 @@ function App() {
   const { currentUser, isLoading, fetchUserInfo } = useUserStore();
 
   useEffect(() => {
-    const unSubscribe = onAuthStateChanged(auth, (authUser) => {
-      fetchUserInfo(authUser?.uid);
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      fetchUserInfo(user?.uid);
     });
 
-    return () => unSubscribe();
+    return () => unsubscribe();
   }, [fetchUserInfo]);
 
   if (isLoading) {
