@@ -1,11 +1,24 @@
-import { collection, getDocs, query, where } from 'firebase/firestore';
+import {
+  arrayUnion,
+  collection,
+  doc,
+  getDocs,
+  query,
+  serverTimestamp,
+  setDoc,
+  updateDoc,
+  where,
+} from 'firebase/firestore';
 import PropTypes from 'prop-types';
 import { X } from 'react-feather';
 import { db } from '../lib/firebase';
 import { useState } from 'react';
+import { useUserStore } from '../lib/userStore';
 
 function AddUserModal({ onClose }) {
   const [user, setUser] = useState(null);
+
+  const { currentUser } = useUserStore();
 
   const handleSearch = async (event) => {
     event.preventDefault();
@@ -22,6 +35,40 @@ function AddUserModal({ onClose }) {
       if (!querySnapshot.empty) {
         setUser(querySnapshot.docs[0].data());
       }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleAddUser = async () => {
+    const messageRef = collection(db, 'messages');
+    const userMessagesRef = collection(db, 'userMessages');
+
+    try {
+      const newMessageRef = doc(messageRef);
+
+      await setDoc(newMessageRef, {
+        createdAt: serverTimestamp(),
+        messages: [],
+      });
+
+      await updateDoc(doc(userMessagesRef, user.id), {
+        messages: arrayUnion({
+          messageId: newMessageRef.id,
+          lastMessage: '',
+          receiverId: currentUser.id,
+          updatedAt: Date.now(),
+        }),
+      });
+
+      await updateDoc(doc(userMessagesRef, currentUser.id), {
+        messages: arrayUnion({
+          messageId: newMessageRef.id,
+          lastMessage: '',
+          receiverId: user.id,
+          updatedAt: Date.now(),
+        }),
+      });
     } catch (error) {
       console.error(error);
     }
@@ -67,7 +114,10 @@ function AddUserModal({ onClose }) {
                 {user.username}
               </span>
 
-              <button className="text-sm ml-auto bg-violet-800 text-white px-4 py-2 rounded-md hover:bg-violet-600 focus:ring-2 focus:ring-violet-500 focus:ring-offset-2">
+              <button
+                className="text-sm ml-auto bg-violet-800 text-white px-4 py-2 rounded-md hover:bg-violet-600 focus:ring-2 focus:ring-violet-500 focus:ring-offset-2"
+                onClick={handleAddUser}
+              >
                 Add User
               </button>
             </div>

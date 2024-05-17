@@ -8,7 +8,7 @@ function ChatListUserInfo() {
   return (
     <div className="flex px-4 py-2 mb-2">
       <img
-        src={currentUser?.avatar || '/TaylorSwift.png'}
+        src={currentUser?.avatar || './TSCat.jpg'}
         alt="User avatar"
         className="w-10 h-10 rounded-full object-cover mr-4"
       />
