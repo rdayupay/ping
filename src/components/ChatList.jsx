@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Search, Plus, Minus } from 'react-feather';
-import { doc, getDoc, onSnapshot } from 'firebase/firestore';
+import { doc, getDoc, onSnapshot, updateDoc } from 'firebase/firestore';
 
 import AddUserModal from './AddUserModal';
 import { useUserStore } from '../lib/userStore';
@@ -46,7 +46,29 @@ function ChatList() {
   };
 
   const handleSelectMessage = async (message) => {
-    selectMessage(message.messageId, message.user);
+    const userMessage = messages.map((msg) => {
+      const { user, ...rest } = msg;
+
+      return rest;
+    });
+
+    const messageIndex = userMessage.findIndex(
+      (msg) => msg.messageId === message.messageId
+    );
+
+    userMessage[messageIndex].isSeen = true;
+
+    const userMessagesRef = doc(db, 'userMessages', currentUser.id);
+
+    try {
+      await updateDoc(userMessagesRef, {
+        messages: userMessage,
+      });
+
+      selectMessage(message.messageId, message.user);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -74,7 +96,9 @@ function ChatList() {
       <ul className="no-scrollbar overflow-y-auto mt-6">
         {messages.map((message) => (
           <li
-            className="flex px-4 py-2 mt-2 mr-1 border-b border-gray-700 items-center cursor-pointer"
+            className={`flex px-4 py-2 mt-2 mr-1 border-b border-gray-700 items-center cursor-pointer ${
+              message.isSeen ? '' : 'bg-violet-900'
+            }`}
             key={message.messageId}
             onClick={() => handleSelectMessage(message)}
           >
