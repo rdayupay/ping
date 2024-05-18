@@ -1,18 +1,27 @@
 import { useEffect, useRef, useState } from 'react';
 import { Camera, Image, Info, Mic, Phone, Smile, Video } from 'react-feather';
+import {
+  arrayUnion,
+  doc,
+  getDoc,
+  onSnapshot,
+  updateDoc,
+} from 'firebase/firestore';
 import EmojiPicker from 'emoji-picker-react';
-import { doc, onSnapshot } from 'firebase/firestore';
+
 import { db } from '../lib/firebase';
 import { useMessageStore } from '../lib/messageStore';
+import { useUserStore } from '../lib/userStore';
 
 function MainChat() {
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState();
   const [text, setText] = useState('');
 
-  const { messageId } = useMessageStore();
-
   const messageEndRef = useRef(null);
+
+  const { currentUser } = useUserStore();
+  const { messageId, user } = useMessageStore();
 
   useEffect(() => {
     messageEndRef.current?.scrollIntoView({
@@ -32,6 +41,48 @@ function MainChat() {
   const handleEmojiClick = (event) => {
     setText((prevText) => prevText + event.emoji);
     setIsOpen(false);
+  };
+
+  const handleSendMessage = async () => {
+    if (!text) {
+      return;
+    }
+
+    try {
+      await updateDoc(doc(db, 'messages', messageId), {
+        messages: arrayUnion({
+          senderId: currentUser.id,
+          text,
+          createdAt: new Date(),
+        }),
+      });
+
+      const userIDs = [currentUser.id, user.id];
+
+      userIDs.forEach(async (id) => {
+        const userMessagesRef = doc(db, 'userMessages', id);
+        const userMessagesSnapshot = await getDoc(userMessagesRef);
+
+        if (userMessagesSnapshot.exists()) {
+          const userMessageData = userMessagesSnapshot.data();
+
+          const messageIndex = userMessageData.messages.findIndex(
+            (message) => message.messageId === messageId
+          );
+
+          userMessageData.messages[messageIndex].lastMessage = text;
+          userMessageData.messages[messageIndex].isSeen =
+            id === currentUser.id ? true : false;
+          userMessageData.messages[messageIndex].updatedAt = Date.now();
+
+          await updateDoc(userMessagesRef, {
+            messages: userMessageData.messages,
+          });
+        }
+      });
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -57,7 +108,7 @@ function MainChat() {
 
       <section className="flex flex-col flex-grow px-4 py-4 overflow-y-auto">
         {/* Message from another person */}
-        <div className="flex">
+        {/* <div className="flex">
           <img
             src="/Selena.png"
             alt="Selena Gomez smiling"
@@ -72,20 +123,27 @@ function MainChat() {
             </p>
             <span className="text-xs text-gray-500">1 min ago</span>
           </div>
-        </div>
+        </div> */}
 
         {/* Message from myself */}
-        <div className="flex flex-col items-end mb-4">
-          <img
-            src="/TSCat.jpg"
-            alt="cat"
-            className="w-full max-w-xs rounded-lg object-cover mb-2"
-          />
-          <p className="text-sm text-white bg-blue-500 rounded-lg p-3 max-w-md">
-            Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-          </p>
-          <span className="text-xs text-gray-500 mt-1">1 min ago</span>
-        </div>
+        {message?.messages?.map((message) => (
+          <div
+            className="flex flex-col items-end mb-4"
+            key={message?.createdAt}
+          >
+            {message.img && (
+              <img
+                src={message.img}
+                alt="Image sent"
+                className="w-full max-w-xs rounded-lg object-cover mb-2"
+              />
+            )}
+            <p className="text-sm text-white bg-blue-500 rounded-lg p-3 max-w-md">
+              {message.text}
+            </p>
+            <span className="text-xs text-gray-500 mt-1">1 min ago</span>
+          </div>
+        ))}
 
         <div ref={messageEndRef} />
       </section>
@@ -124,6 +182,7 @@ function MainChat() {
         <button
           type="button"
           className="h-8 px-4 rounded-md bg-violet-500 text-white text-xs focus:outline-none focus:ring-1 focus:ring-violet-400 focus:border-transparent"
+          onClick={handleSendMessage}
         >
           Send
         </button>
