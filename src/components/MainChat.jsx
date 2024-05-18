@@ -3,11 +3,14 @@ import { Camera, Image, Info, Mic, Phone, Smile, Video } from 'react-feather';
 import EmojiPicker from 'emoji-picker-react';
 import { doc, onSnapshot } from 'firebase/firestore';
 import { db } from '../lib/firebase';
+import { useMessageStore } from '../lib/messageStore';
 
 function MainChat() {
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState();
   const [text, setText] = useState('');
+
+  const { messageId } = useMessageStore();
 
   const messageEndRef = useRef(null);
 
@@ -19,15 +22,12 @@ function MainChat() {
   }, []);
 
   useEffect(() => {
-    const unsubscribe = onSnapshot(
-      doc(db, 'messages', 'WAQ4WcCOqnDmW1uE8iYb'),
-      (res) => {
-        setMessage(res.data());
-      }
-    );
+    const unsubscribe = onSnapshot(doc(db, 'messages', messageId), (res) => {
+      setMessage(res.data());
+    });
 
     return () => unsubscribe();
-  }, []);
+  }, [messageId]);
 
   const handleEmojiClick = (event) => {
     setText((prevText) => prevText + event.emoji);

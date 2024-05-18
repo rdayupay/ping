@@ -5,12 +5,14 @@ import { doc, getDoc, onSnapshot } from 'firebase/firestore';
 import AddUserModal from './AddUserModal';
 import { useUserStore } from '../lib/userStore';
 import { db } from '../lib/firebase';
+import { useMessageStore } from '../lib/messageStore';
 
 function ChatList() {
   const [addUser, setAddUser] = useState(false);
   const [messages, setMessages] = useState([]);
 
   const { currentUser } = useUserStore();
+  const { messageId, selectMessage } = useMessageStore();
 
   useEffect(() => {
     const unsubscribe = onSnapshot(
@@ -43,6 +45,10 @@ function ChatList() {
     setAddUser(!addUser);
   };
 
+  const handleSelectMessage = async (message) => {
+    selectMessage(message.messageId, message.user);
+  };
+
   return (
     <div>
       <div className="flex items-center ">
@@ -65,12 +71,13 @@ function ChatList() {
         </button>
       </div>
 
-      {messages.map((message) => (
-        <ul
-          className="no-scrollbar overflow-y-auto mt-6"
-          key={message.messageId}
-        >
-          <li className="flex px-4 py-2 mt-2 mr-1 border-b border-gray-700 items-center">
+      <ul className="no-scrollbar overflow-y-auto mt-6">
+        {messages.map((message) => (
+          <li
+            className="flex px-4 py-2 mt-2 mr-1 border-b border-gray-700 items-center cursor-pointer"
+            key={message.messageId}
+            onClick={() => handleSelectMessage(message)}
+          >
             <img
               src={message.user.avatar || './TSCat.jpg'}
               alt="User avatar"
@@ -83,8 +90,8 @@ function ChatList() {
               <p className="text-xs text-gray-200">{message.lastMessage}</p>
             </div>
           </li>
-        </ul>
-      ))}
+        ))}
+      </ul>
 
       {addUser && <AddUserModal onClose={toggleAddUserModal} />}
     </div>
