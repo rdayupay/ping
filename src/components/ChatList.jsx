@@ -10,6 +10,7 @@ import { useMessageStore } from '../lib/messageStore';
 function ChatList() {
   const [addUser, setAddUser] = useState(false);
   const [messages, setMessages] = useState([]);
+  const [searchInput, setSearchInput] = useState('');
 
   const { currentUser } = useUserStore();
   const { messageId, selectMessage } = useMessageStore();
@@ -71,6 +72,10 @@ function ChatList() {
     }
   };
 
+  const filteredMessages = messages.filter((message) =>
+    message.user.username.toLowerCase().includes(searchInput.toLowerCase())
+  );
+
   return (
     <div>
       <div className="flex items-center ">
@@ -81,6 +86,7 @@ function ChatList() {
             placeholder="Search"
             className="bg-transparent focus:outline-none text-black flex-1 text-sm overflow-hidden max-w-full"
             maxLength={30}
+            onChange={(e) => setSearchInput(e.target.value)}
           />
         </div>
 
@@ -94,7 +100,7 @@ function ChatList() {
       </div>
 
       <ul className="no-scrollbar overflow-y-auto mt-6">
-        {messages.map((message) => (
+        {filteredMessages.map((message) => (
           <li
             className={`flex px-4 py-2 mt-2 mr-1 border-b border-gray-700 items-center cursor-pointer ${
               message.isSeen ? '' : 'bg-violet-900'
