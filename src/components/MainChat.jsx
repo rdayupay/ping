@@ -161,7 +161,9 @@ function MainChat() {
         {/* Message from myself */}
         {message?.messages?.map((message) => (
           <div
-            className="flex flex-col items-end mb-4"
+            className={`flex flex-col mb-4 ${
+              message.senderId === currentUser.id ? 'items-end' : 'items-start'
+            }`}
             key={message?.createdAt}
           >
             {message.image && (
@@ -172,7 +174,13 @@ function MainChat() {
               />
             )}
             {message.text && (
-              <p className="text-sm text-white bg-blue-500 rounded-lg p-3 max-w-md">
+              <p
+                className={`text-sm text-white rounded-full p-3 max-w-md ${
+                  message.senderId === currentUser.id
+                    ? 'bg-blue-500 '
+                    : 'bg-gray-700'
+                } `}
+              >
                 {message.text}
               </p>
             )}
