@@ -35,7 +35,7 @@ function ChatList() {
 
         const messageData = await Promise.all(promises);
 
-        setMessages(messageData.sort((a, b) => a.updatedAt - b.updatedAt));
+        setMessages(messageData.sort((a, b) => b.updatedAt - a.updatedAt));
       }
     );
 
