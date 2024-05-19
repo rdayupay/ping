@@ -12,11 +12,16 @@ import EmojiPicker from 'emoji-picker-react';
 import { db } from '../lib/firebase';
 import { useMessageStore } from '../lib/messageStore';
 import { useUserStore } from '../lib/userStore';
+import upload from '../lib/upload';
 
 function MainChat() {
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState();
   const [text, setText] = useState('');
+  const [image, setImage] = useState({
+    file: null,
+    url: '',
+  });
 
   const messageEndRef = useRef(null);
 
@@ -43,18 +48,38 @@ function MainChat() {
     setIsOpen(false);
   };
 
-  const handleSendMessage = async () => {
-    if (!text) {
+  const handleImageUpload = (event) => {
+    if (!event.target.files[0]) {
       return;
     }
 
+    setImage({
+      file: event.target.files[0],
+      url: URL.createObjectURL(event.target.files[0]),
+    });
+  };
+
+  const handleSendMessage = async () => {
+    if (!text && !image.file) {
+      return;
+    }
+
+    let imageUrl = null;
+
     try {
+      if (image.file) {
+        imageUrl = await upload(image.file);
+      }
+
+      const newMessage = {
+        senderId: currentUser.id,
+        ...(text && { text }),
+        ...(imageUrl && { image: imageUrl }),
+        createdAt: new Date(),
+      };
+
       await updateDoc(doc(db, 'messages', messageId), {
-        messages: arrayUnion({
-          senderId: currentUser.id,
-          text,
-          createdAt: new Date(),
-        }),
+        messages: arrayUnion(newMessage),
       });
 
       const userIDs = [currentUser.id, user.id];
@@ -70,7 +95,8 @@ function MainChat() {
             (message) => message.messageId === messageId
           );
 
-          userMessageData.messages[messageIndex].lastMessage = text;
+          userMessageData.messages[messageIndex].lastMessage =
+            text || 'Sent an image';
           userMessageData.messages[messageIndex].isSeen =
             id === currentUser.id ? true : false;
           userMessageData.messages[messageIndex].updatedAt = Date.now();
@@ -83,6 +109,13 @@ function MainChat() {
     } catch (error) {
       console.error(error);
     }
+
+    setImage({
+      file: null,
+      url: '',
+    });
+
+    setText('');
   };
 
   return (
@@ -131,26 +164,46 @@ function MainChat() {
             className="flex flex-col items-end mb-4"
             key={message?.createdAt}
           >
-            {message.img && (
+            {message.image && (
               <img
-                src={message.img}
+                src={message.image}
                 alt="Image sent"
                 className="w-full max-w-xs rounded-lg object-cover mb-2"
               />
             )}
-            <p className="text-sm text-white bg-blue-500 rounded-lg p-3 max-w-md">
-              {message.text}
-            </p>
+            {message.text && (
+              <p className="text-sm text-white bg-blue-500 rounded-lg p-3 max-w-md">
+                {message.text}
+              </p>
+            )}
             <span className="text-xs text-gray-500 mt-1">1 min ago</span>
           </div>
         ))}
+
+        {image.url && (
+          <figure>
+            <img
+              src={image.url}
+              alt="Sent image"
+              className="w-full max-w-xs rounded-lg object-cover mb-2"
+            />
+          </figure>
+        )}
 
         <div ref={messageEndRef} />
       </section>
 
       <section className="flex items-center gap-2 px-2 py-4 border-t border-gray-700">
         <div className="flex items-center gap-1 sm:gap-2">
-          <Image size={32} className="text-white hover:cursor-pointer" />
+          <label htmlFor="file">
+            <Image size={32} className="hover:cursor-pointer" />
+          </label>
+          <input
+            type="file"
+            id="file"
+            className="hidden"
+            onChange={handleImageUpload}
+          />
           <Camera size={32} className="text-white hover:cursor-pointer" />
           <Mic size={32} className="text-white hover:cursor-pointer" />
         </div>
