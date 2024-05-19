@@ -1,24 +1,59 @@
 import { ChevronDown, ChevronUp, Download, Plus } from 'react-feather';
-import { auth } from '../lib/firebase';
+import { arrayRemove, arrayUnion, doc, updateDoc } from 'firebase/firestore';
+
+import { auth, db } from '../lib/firebase';
+import { useMessageStore } from '../lib/messageStore';
+import { useUserStore } from '../lib/userStore';
 
 function UserDetails() {
+  const {
+    messageId,
+    user,
+    isCurrentUserBlocked,
+    isReceiverBlocked,
+    setBlockedState,
+  } = useMessageStore();
+
+  const { currentUser } = useUserStore();
+
+  const handleBlockUser = async () => {
+    if (!user) return;
+
+    const userDocRef = doc(db, 'users', currentUser.id);
+
+    try {
+      await updateDoc(userDocRef, {
+        blocked: isReceiverBlocked ? arrayRemove(user.id) : arrayUnion(user.id),
+      });
+
+      setBlockedState();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <section>
       <article className="flex-col mx-auto mb-4 pl-4 py-4 border-b border-gray-700">
         <img
-          src="/Selena.png"
-          alt="Selena Gomez smiling"
+          src={user?.avatar || './TSCat.jpg'}
+          alt="User avatar"
           className="w-32 h-32 rounded-full object-cover mb-2 mx-auto"
         />
-        <h2 className="text-center font-semibold mb-2">Selena Gomez</h2>
+        <h2 className="text-center font-semibold mb-2">{user?.username}</h2>
         <p className="text-sm text-center">Lorem ipsum dolor sit amet.</p>
       </article>
 
       <button
         type="button"
         className="mx-4 mb-6 text-sm text-red-700 font-semibold hover:text-red-500"
+        onClick={handleBlockUser}
       >
-        Block User
+        {isCurrentUserBlocked
+          ? 'You are blocked by this user'
+          : isReceiverBlocked
+          ? 'Unblock User'
+          : ' Block User'}
       </button>
 
       <aside>

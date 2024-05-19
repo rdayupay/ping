@@ -26,7 +26,8 @@ function MainChat() {
   const messageEndRef = useRef(null);
 
   const { currentUser } = useUserStore();
-  const { messageId, user } = useMessageStore();
+  const { messageId, user, isCurrentUserBlocked, isReceiverBlocked } =
+    useMessageStore();
 
   useEffect(() => {
     const unsubscribe = onSnapshot(doc(db, 'messages', messageId), (res) => {
@@ -123,12 +124,12 @@ function MainChat() {
       <section>
         <div className="flex px-4 py-2 border-b border-gray-700 items-center">
           <img
-            src="/Selena.png"
-            alt="Selena Gomez smiling"
+            src={user?.avatar || './TSCat.jpg'}
+            alt="User avatar"
             className="w-12 h-12 rounded-full object-cover mr-4"
           />
           <div className="flex flex-col flex-grow">
-            <span className="text-sm text-white">Selena Gomez</span>
+            <span className="text-sm text-white">{user?.username}</span>
             <p className="text-xs text-gray-500">Lorem ipsum dolor sit amet.</p>
           </div>
           <div className="flex lg:gap-8 md:gap-4 gap-2 items-center">
@@ -217,10 +218,17 @@ function MainChat() {
         </div>
         <input
           type="text"
-          placeholder="Type a message..."
-          className="w-full h-10 px-4 py-2 rounded-md bg-gray-700 text-white text-sm focus:outline-none focus:ring-1 focus:ring-gray-600 focus:border-transparent"
+          placeholder={
+            isCurrentUserBlocked
+              ? 'You cannot send messages to this user'
+              : isReceiverBlocked
+              ? 'This user is blocked. Unblock to send messages.'
+              : 'Type a message...'
+          }
+          className="w-full h-10 px-4 py-2 rounded-md bg-gray-700 text-white text-sm focus:outline-none focus:ring-1 focus:ring-gray-600 focus:border-transparent disabled:cursor-not-allowed disabled:bg-gray-400 disabled:placeholder:text-white"
           value={text}
           onChange={(event) => setText(event.target.value)}
+          disabled={isCurrentUserBlocked || isReceiverBlocked}
         />
 
         <div className="relative">
@@ -242,8 +250,9 @@ function MainChat() {
 
         <button
           type="button"
-          className="h-8 px-4 rounded-md bg-violet-500 text-white text-xs focus:outline-none focus:ring-1 focus:ring-violet-400 focus:border-transparent"
+          className="h-8 px-4 rounded-md bg-violet-500 text-white text-xs focus:outline-none focus:ring-1 focus:ring-violet-400 focus:border-transparent disabled:cursor-not-allowed disabled:bg-gray-400"
           onClick={handleSendMessage}
+          disabled={isCurrentUserBlocked || isReceiverBlocked}
         >
           Send
         </button>

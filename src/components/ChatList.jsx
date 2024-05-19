@@ -103,13 +103,19 @@ function ChatList() {
             onClick={() => handleSelectMessage(message)}
           >
             <img
-              src={message.user.avatar || './TSCat.jpg'}
+              src={
+                message.user.blocked.includes(currentUser.id)
+                  ? './TSCat.jpg'
+                  : message.user.avatar || './TSCat.jpg'
+              }
               alt="User avatar"
               className="w-8 h-8 rounded-full object-cover mr-4"
             />
             <div>
               <span className="text-sm text-white">
-                {message.user.username}
+                {message.user.blocked.includes(currentUser.id)
+                  ? 'User'
+                  : message.user.username}
               </span>
               <p className="text-xs text-gray-200">{message.lastMessage}</p>
             </div>
