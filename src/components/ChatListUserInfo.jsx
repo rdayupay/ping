@@ -21,7 +21,7 @@ function ChatListUserInfo() {
           <Edit size={16} className="cursor-pointer" />
           <Settings size={16} className="cursor-pointer" />
         </div>
-        <p className="text-sm text-gray-200">Online</p>
+        <p className="text-sm text-gray-200">Do not disturb ⛔</p>
       </div>
     </div>
   );

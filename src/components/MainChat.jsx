@@ -8,6 +8,7 @@ import {
   updateDoc,
 } from 'firebase/firestore';
 import EmojiPicker from 'emoji-picker-react';
+import { format } from 'timeago.js';
 
 import { db } from '../lib/firebase';
 import { useMessageStore } from '../lib/messageStore';
@@ -185,7 +186,9 @@ function MainChat() {
                 {message.text}
               </p>
             )}
-            <span className="text-xs text-gray-500 mt-1">1 min ago</span>
+            <span className="text-xs text-gray-500 mt-1">
+              {format(message.createdAt.toDate())}
+            </span>
           </div>
         ))}
 

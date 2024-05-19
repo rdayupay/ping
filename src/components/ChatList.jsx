@@ -78,32 +78,36 @@ function ChatList() {
 
   return (
     <div>
-      <div className="flex items-center ">
-        <div className="flex items-center px-2 py-1 bg-gray-200 rounded-md ml-2 w-20 lg:w-52 md:w-40">
+      <div className="flex items-center mx-2">
+        <div className="flex items-center px-2 py-1 bg-gray-200 rounded-md w-full">
           <Search size={14} className="text-gray-400 mr-1 flex-shrink-0" />
           <input
             type="text"
             placeholder="Search"
-            className="bg-transparent focus:outline-none text-black flex-1 text-sm overflow-hidden max-w-full"
+            className="bg-transparent focus:outline-none text-black text-sm overflow-hidden w-full"
             maxLength={30}
             onChange={(e) => setSearchInput(e.target.value)}
           />
         </div>
 
-        <button type="button" onClick={toggleAddUserModal}>
-          {addUser ? (
-            <Minus size={16} className="text-gray-300 cursor-pointer ml-1" />
-          ) : (
-            <Plus size={16} className="text-gray-300 cursor-pointer ml-1" />
-          )}
+        <button
+          type="button"
+          onClick={toggleAddUserModal}
+          className="flex text-xs w-34 items-center bg-violet-600 rounded-lg mx-2 p-1"
+        >
+          <Plus size={16} className="text-gray-300 cursor-pointer" />
         </button>
       </div>
 
       <ul className="no-scrollbar overflow-y-auto mt-6">
         {filteredMessages.map((message) => (
           <li
-            className={`flex px-4 py-2 mt-2 mr-1 border-b border-gray-700 items-center cursor-pointer ${
+            className={`flex px-4 py-2 mt-2 mr-1 border-l-4 items-center cursor-pointer ${
               message.isSeen ? '' : 'bg-violet-900'
+            } ${
+              messageId === message.messageId
+                ? 'border-blue-500'
+                : 'border-transparent'
             }`}
             key={message.messageId}
             onClick={() => handleSelectMessage(message)}

@@ -1,7 +1,7 @@
 import { ChevronDown, ChevronUp, Download, Plus } from 'react-feather';
 import { arrayRemove, arrayUnion, doc, updateDoc } from 'firebase/firestore';
 
-import { auth, db } from '../lib/firebase';
+import { db } from '../lib/firebase';
 import { useMessageStore } from '../lib/messageStore';
 import { useUserStore } from '../lib/userStore';
 
@@ -93,14 +93,6 @@ function UserDetails() {
           </li>
         </ul>
       </aside>
-
-      <button
-        type="button"
-        className="block mx-2 text-center mt-36 text-md text-white bg-blue-700  py-2 w-full rounded-md hover:bg-blue-600"
-        onClick={() => auth.signOut()}
-      >
-        Logout
-      </button>
     </section>
   );
 }
