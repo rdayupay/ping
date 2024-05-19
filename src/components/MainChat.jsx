@@ -29,19 +29,19 @@ function MainChat() {
   const { messageId, user } = useMessageStore();
 
   useEffect(() => {
-    messageEndRef.current?.scrollIntoView({
-      behavior: 'auto',
-      block: 'end',
-    });
-  }, []);
-
-  useEffect(() => {
     const unsubscribe = onSnapshot(doc(db, 'messages', messageId), (res) => {
       setMessage(res.data());
     });
 
     return () => unsubscribe();
   }, [messageId]);
+
+  useEffect(() => {
+    messageEndRef.current?.scrollIntoView({
+      behavior: 'auto',
+      block: 'end',
+    });
+  }, [message?.messages]);
 
   const handleEmojiClick = (event) => {
     setText((prevText) => prevText + event.emoji);
