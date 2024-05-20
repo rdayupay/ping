@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Search, Plus, Minus } from 'react-feather';
+import { Search, Plus } from 'react-feather';
 import { doc, getDoc, onSnapshot, updateDoc } from 'firebase/firestore';
 
 import AddUserModal from './AddUserModal';
@@ -35,7 +35,11 @@ function ChatList() {
 
         const messageData = await Promise.all(promises);
 
-        setMessages(messageData.sort((a, b) => b.updatedAt - a.updatedAt));
+        const sortedMessages = messageData.sort(
+          (a, b) => b.updatedAt - a.updatedAt
+        );
+
+        setMessages(sortedMessages);
       }
     );
 

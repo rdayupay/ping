@@ -142,53 +142,45 @@ function MainChat() {
       </section>
 
       <section className="flex flex-col flex-grow px-4 py-4 overflow-y-auto">
-        {/* Message from another person */}
-        {/* <div className="flex">
-          <img
-            src="/Selena.png"
-            alt="Selena Gomez smiling"
-            className="w-6 h-6 rounded-full object-cover mr-4"
-          />
-          <div>
-            <p className="text-sm text-white bg-gray-700 rounded-lg p-3 max-w-md">
-              Lorem, ipsum dolor sit amet consectetur adipisicing elit. Iste
-              quam sapiente, temporibus aut aspernatur enim illum nulla deleniti
-              quas adipisci voluptate impedit ratione qui blanditiis minima?
-              Animi inventore voluptate nisi!
-            </p>
-            <span className="text-xs text-gray-500">1 min ago</span>
-          </div>
-        </div> */}
-
-        {/* Message from myself */}
         {message?.messages?.map((message) => (
           <div
-            className={`flex flex-col mb-4 ${
-              message.senderId === currentUser.id ? 'items-end' : 'items-start'
+            className={`flex mb-4 ${
+              message.senderId === currentUser.id
+                ? 'flex-row-reverse items-end'
+                : 'flex-row items-start'
             }`}
             key={message?.createdAt}
           >
-            {message.image && (
+            {message.senderId !== currentUser.id && (
               <img
-                src={message.image}
-                alt="Image sent"
-                className="w-full max-w-xs rounded-lg object-cover mb-2"
+                src={user?.avatar || './TSCat.jpg'}
+                alt="User avatar"
+                className="w-6 h-6 rounded-full object-cover mr-2"
               />
             )}
-            {message.text && (
-              <p
-                className={`text-sm text-white rounded-full p-3 max-w-md ${
-                  message.senderId === currentUser.id
-                    ? 'bg-blue-500 '
-                    : 'bg-gray-700'
-                } `}
-              >
-                {message.text}
-              </p>
-            )}
-            <span className="text-xs text-gray-500 mt-1">
-              {format(message.createdAt.toDate())}
-            </span>
+            <div className="flex flex-col max-w-full">
+              {message.image && (
+                <img
+                  src={message.image}
+                  alt="Image sent"
+                  className="w-full max-w-xs rounded-lg object-cover mb-2"
+                />
+              )}
+              {message.text && (
+                <p
+                  className={`text-sm text-white rounded-lg p-3 max-w-md ${
+                    message.senderId === currentUser.id
+                      ? 'bg-blue-500'
+                      : 'bg-gray-700'
+                  } `}
+                >
+                  {message.text}
+                </p>
+              )}
+              <span className="text-xs text-gray-500 mt-1">
+                {format(message.createdAt.toDate())}
+              </span>
+            </div>
           </div>
         ))}
 
