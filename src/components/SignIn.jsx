@@ -26,7 +26,7 @@ function SignIn() {
 
   return (
     <div className="bg-violet-600 p-8 rounded-lg shadow-lg w-full max-w-md bg-opacity-75">
-      <h2 className="text-3xl mb-6 text-center">Welcome back!</h2>
+      <h2 className="text-3xl mb-6 text-center">Welcome back to Ping!</h2>
       <form className="space-y-6" onSubmit={handleSignIn}>
         <input
           type="text"
@@ -47,7 +47,7 @@ function SignIn() {
           className="w-full bg-blue-500 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:bg-gray-400"
           disabled={loading}
         >
-          Sign In
+          {loading ? 'Signing in...' : 'Sign In'}
         </button>
       </form>
     </div>

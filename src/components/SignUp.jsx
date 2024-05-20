@@ -46,6 +46,13 @@ function SignUp() {
       });
 
       toast.success('Account created successfully! You can now sign in.');
+
+      setAvatar({
+        file: null,
+        url: '',
+      });
+
+      event.target.reset();
     } catch (error) {
       console.error(error);
       toast.error(error.message);

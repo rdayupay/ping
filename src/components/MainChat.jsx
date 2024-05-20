@@ -68,6 +68,8 @@ function MainChat() {
 
     let imageUrl = null;
 
+    setText('');
+
     try {
       if (image.file) {
         imageUrl = await upload(image.file);
@@ -116,8 +118,13 @@ function MainChat() {
       file: null,
       url: '',
     });
+  };
 
-    setText('');
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      handleSendMessage();
+    }
   };
 
   return (
@@ -222,6 +229,7 @@ function MainChat() {
           }
           className="w-full h-10 px-4 py-2 rounded-md bg-gray-700 text-white text-sm focus:outline-none focus:ring-1 focus:ring-gray-600 focus:border-transparent disabled:cursor-not-allowed disabled:bg-gray-400 disabled:placeholder:text-white"
           value={text}
+          onKeyDown={handleKeyDown}
           onChange={(event) => setText(event.target.value)}
           disabled={isCurrentUserBlocked || isReceiverBlocked}
         />
