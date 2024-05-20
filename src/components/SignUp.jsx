@@ -22,6 +22,12 @@ function SignUp() {
 
     const { username, email, password } = Object.fromEntries(formData);
 
+    if (!avatar.file) {
+      toast.error('Please upload an avatar.');
+      setLoading(false);
+      return;
+    }
+
     try {
       const res = await createUserWithEmailAndPassword(auth, email, password);
 
@@ -39,7 +45,7 @@ function SignUp() {
         messages: [],
       });
 
-      toast.success('Account created successfully!');
+      toast.success('Account created successfully! You can now sign in.');
     } catch (error) {
       console.error(error);
       toast.error(error.message);
@@ -70,7 +76,7 @@ function SignUp() {
           <img
             src={avatar.url || './TSCat.jpg'}
             alt="Avatar"
-            className="w-12 h-12 rounded-full mr-2"
+            className="w-12 h-12 rounded-full object-cover mr-2"
           />
           Upload an image
         </label>
@@ -107,7 +113,7 @@ function SignUp() {
           className="w-full bg-blue-500  py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:bg-gray-400"
           disabled={loading}
         >
-          Sign Up
+          {loading ? 'Loading...' : 'Sign Up'}
         </button>
       </form>
     </div>
