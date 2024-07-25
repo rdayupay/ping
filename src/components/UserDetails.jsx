@@ -1,9 +1,9 @@
-import { ChevronDown, ChevronUp, Download, Plus } from 'react-feather';
-import { arrayRemove, arrayUnion, doc, updateDoc } from 'firebase/firestore';
+import { ChevronDown, ChevronUp, Download, Plus } from "react-feather";
+import { arrayRemove, arrayUnion, doc, updateDoc } from "firebase/firestore";
 
-import { db } from '../lib/firebase';
-import { useMessageStore } from '../lib/messageStore';
-import { useUserStore } from '../lib/userStore';
+import { db } from "../lib/firebase";
+import { useMessageStore } from "../lib/messageStore";
+import { useUserStore } from "../lib/userStore";
 
 function UserDetails() {
   const {
@@ -19,7 +19,7 @@ function UserDetails() {
   const handleBlockUser = async () => {
     if (!user) return;
 
-    const userDocRef = doc(db, 'users', currentUser.id);
+    const userDocRef = doc(db, "users", currentUser.id);
 
     try {
       await updateDoc(userDocRef, {
@@ -36,12 +36,12 @@ function UserDetails() {
     <section>
       <article className="flex-col mx-auto mb-4 pl-4 py-4 border-b border-gray-700">
         <img
-          src={user?.avatar || './TSCat.jpg'}
+          src={user?.avatar || "./TSCat.jpg"}
           alt="User avatar"
           className="w-32 h-32 rounded-full object-cover mb-2 mx-auto"
         />
         <h2 className="text-center font-semibold mb-2">{user?.username}</h2>
-        <p className="text-sm text-center">Lorem ipsum dolor sit amet.</p>
+        <p className="text-sm text-center">Life happens, coffee helps.</p>
       </article>
 
       <button
@@ -50,10 +50,10 @@ function UserDetails() {
         onClick={handleBlockUser}
       >
         {isCurrentUserBlocked
-          ? 'You are blocked by this user'
+          ? "You are blocked by this user"
           : isReceiverBlocked
-          ? 'Unblock User'
-          : ' Block User'}
+          ? "Unblock User"
+          : " Block User"}
       </button>
 
       <aside>

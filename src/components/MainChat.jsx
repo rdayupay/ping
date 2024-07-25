@@ -1,27 +1,27 @@
-import { useEffect, useRef, useState } from 'react';
-import { Camera, Image, Info, Mic, Phone, Smile, Video } from 'react-feather';
+import { useEffect, useRef, useState } from "react";
+import { Camera, Image, Info, Mic, Phone, Smile, Video } from "react-feather";
 import {
   arrayUnion,
   doc,
   getDoc,
   onSnapshot,
   updateDoc,
-} from 'firebase/firestore';
-import EmojiPicker from 'emoji-picker-react';
-import { format } from 'timeago.js';
+} from "firebase/firestore";
+import EmojiPicker from "emoji-picker-react";
+import { format } from "timeago.js";
 
-import { db } from '../lib/firebase';
-import { useMessageStore } from '../lib/messageStore';
-import { useUserStore } from '../lib/userStore';
-import upload from '../lib/upload';
+import { db } from "../lib/firebase";
+import { useMessageStore } from "../lib/messageStore";
+import { useUserStore } from "../lib/userStore";
+import upload from "../lib/upload";
 
 function MainChat() {
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState();
-  const [text, setText] = useState('');
+  const [text, setText] = useState("");
   const [image, setImage] = useState({
     file: null,
-    url: '',
+    url: "",
   });
 
   const messageEndRef = useRef(null);
@@ -31,7 +31,7 @@ function MainChat() {
     useMessageStore();
 
   useEffect(() => {
-    const unsubscribe = onSnapshot(doc(db, 'messages', messageId), (res) => {
+    const unsubscribe = onSnapshot(doc(db, "messages", messageId), (res) => {
       setMessage(res.data());
     });
 
@@ -40,8 +40,8 @@ function MainChat() {
 
   useEffect(() => {
     messageEndRef.current?.scrollIntoView({
-      behavior: 'auto',
-      block: 'end',
+      behavior: "auto",
+      block: "end",
     });
   }, [message?.messages]);
 
@@ -68,7 +68,7 @@ function MainChat() {
 
     let imageUrl = null;
 
-    setText('');
+    setText("");
 
     try {
       if (image.file) {
@@ -82,14 +82,14 @@ function MainChat() {
         createdAt: new Date(),
       };
 
-      await updateDoc(doc(db, 'messages', messageId), {
+      await updateDoc(doc(db, "messages", messageId), {
         messages: arrayUnion(newMessage),
       });
 
       const userIDs = [currentUser.id, user.id];
 
       userIDs.forEach(async (id) => {
-        const userMessagesRef = doc(db, 'userMessages', id);
+        const userMessagesRef = doc(db, "userMessages", id);
         const userMessagesSnapshot = await getDoc(userMessagesRef);
 
         if (userMessagesSnapshot.exists()) {
@@ -100,7 +100,7 @@ function MainChat() {
           );
 
           userMessageData.messages[messageIndex].lastMessage =
-            text || 'Sent an image';
+            text || "Sent an image";
           userMessageData.messages[messageIndex].isSeen =
             id === currentUser.id ? true : false;
           userMessageData.messages[messageIndex].updatedAt = Date.now();
@@ -116,12 +116,12 @@ function MainChat() {
 
     setImage({
       file: null,
-      url: '',
+      url: "",
     });
   };
 
   const handleKeyDown = (event) => {
-    if (event.key === 'Enter') {
+    if (event.key === "Enter") {
       event.preventDefault();
       handleSendMessage();
     }
@@ -132,13 +132,13 @@ function MainChat() {
       <section>
         <div className="flex px-4 py-2 border-b border-gray-700 items-center">
           <img
-            src={user?.avatar || './TSCat.jpg'}
+            src={user?.avatar || "./TSCat.jpg"}
             alt="User avatar"
             className="w-12 h-12 rounded-full object-cover mr-4"
           />
           <div className="flex flex-col flex-grow">
             <span className="text-sm text-white">{user?.username}</span>
-            <p className="text-xs text-gray-500">Lorem ipsum dolor sit amet.</p>
+            <p className="text-xs text-gray-500">Life happens, coffee helps.</p>
           </div>
           <div className="flex lg:gap-8 md:gap-4 gap-2 items-center">
             <Phone className="hover:cursor-pointer" />
@@ -153,14 +153,14 @@ function MainChat() {
           <div
             className={`flex mb-4 ${
               message.senderId === currentUser.id
-                ? 'flex-row-reverse items-end'
-                : 'flex-row items-start'
+                ? "flex-row-reverse items-end"
+                : "flex-row items-start"
             }`}
             key={message?.createdAt}
           >
             {message.senderId !== currentUser.id && (
               <img
-                src={user?.avatar || './TSCat.jpg'}
+                src={user?.avatar || "./TSCat.jpg"}
                 alt="User avatar"
                 className="w-6 h-6 rounded-full object-cover mr-2"
               />
@@ -177,8 +177,8 @@ function MainChat() {
                 <p
                   className={`text-sm text-white rounded-lg p-3 max-w-md ${
                     message.senderId === currentUser.id
-                      ? 'bg-blue-500'
-                      : 'bg-gray-700'
+                      ? "bg-blue-500"
+                      : "bg-gray-700"
                   } `}
                 >
                   {message.text}
@@ -222,10 +222,10 @@ function MainChat() {
           type="text"
           placeholder={
             isCurrentUserBlocked
-              ? 'You cannot send messages to this user'
+              ? "You cannot send messages to this user"
               : isReceiverBlocked
-              ? 'This user is blocked. Unblock to send messages.'
-              : 'Type a message...'
+              ? "This user is blocked. Unblock to send messages."
+              : "Type a message..."
           }
           className="w-full h-10 px-4 py-2 rounded-md bg-gray-700 text-white text-sm focus:outline-none focus:ring-1 focus:ring-gray-600 focus:border-transparent disabled:cursor-not-allowed disabled:bg-gray-400 disabled:placeholder:text-white"
           value={text}
